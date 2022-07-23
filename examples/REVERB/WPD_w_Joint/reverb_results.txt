@@ -1,0 +1,11 @@
+id: (c30-c30_simdata_et_for_8ch_far_room1_a_c30c020a)
+Scores: (#C #S #D #I) 9 0 0 0
+REF:  in some cases there will be employment as usual 
+HYP:  in some cases there will be employment as usual 
+Eval:                                                 
+
+id: (t21-t21_realdata_et_for_8ch_far_room1_a_t21c0211)
+Scores: (#C #S #D #I) 16 0 0 0
+REF:  this isn't the kind of thing that will prove effective immediately one senior bank economist said 
+HYP:  this isn't the kind of thing that will prove effective immediately one senior bank economist said 
+Eval:                                                                                                   

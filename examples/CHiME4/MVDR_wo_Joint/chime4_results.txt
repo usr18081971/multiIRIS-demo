@@ -1,0 +1,11 @@
+id: (f05-f05_442c020y_bus_simu)
+Scores: (#C #S #D #I) 23 0 0 0
+REF:  he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market 
+HYP:  he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market 
+Eval:                                                                                                                                         
+
+id: (f05-f05_440c020i_bus_real)
+Scores: (#C #S #D #I) 21 1 2 0
+REF:  there shouldn't be any risk to the banks in this sort of STUFF said lawrence COHN a banking analyst at merrill lynch AND company 
+HYP:  there shouldn't be any risk to the banks in this sort of ***** said lawrence KING a banking analyst at merrill lynch *** company 
+Eval:                                                          D                   S                                       D           

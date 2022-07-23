@@ -1,0 +1,12 @@
+id: (f05-f05_442c020y_bus_simu)
+Scores: (#C #S #D #I) 16 4 3 1
+REF:  he also said THAT THE  company for the first time WAS developing ****** DRUGS specifically FOR the over the counter CONSUMER health care MARKET 
+HYP:  he also said **** THIS company for the first time IS  developing GROWTH IN    specifically *** the over the counter COMPANY  health care ****** 
+Eval:              D    S                               S              I      S                  D                        S                    D      
+
+id: (f05-f05_440c020i_bus_real)
+Scores: (#C #S #D #I) 18 3 3 0
+REF:  there shouldn't be any risk to the banks in this sort OF stuff said lawrence COHN  a banking analyst at MERRILL LYNCH AND      COMPANY 
+HYP:  there shouldn't be any risk to the banks in this sort ** stuff said lawrence POWER a banking analyst at ******* ***** MARYLAND COLLEGE 
+Eval:                                                       D                      S                          D       D     S        S       
+

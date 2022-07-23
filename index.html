@@ -1,0 +1,364 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>End-to-End Integration of Speech Recognition, Dereverberation, Beamforming, and Self-Supervised Learning Representation</title>
+      <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+      <!-- <link rel="shortcut icon" href="../../images/taco.png"> -->
+      <script>
+         function play(path) {{
+           var player = document.getElementById('player');
+           player.src = path;
+           player.play();
+         }}
+      </script>
+      <style>
+         .audio-cell {
+         /* Center audio widgets in the table cell. */
+         text-align: center;
+         padding-bottom: 1px;
+         padding-top: 1px;
+         }
+         .audio-cell-padded {
+         text-align: center;
+         padding-bottom: 10px;
+         padding-top: 10px;
+         }
+         .audio-header {
+         /* Don't wrap header text. */
+         white-space: nowrap;
+         /* Some breaking space between headers for readability. */
+         padding-right: 5px;
+         padding-left: 5px;
+         }
+         .reference-cell {
+         /* For uniformity and to wrap long reference text, limit the reference cell's width. */
+         width: 25%;
+         padding-top: 20px;
+         padding-bottom: 20px;
+         }
+         .sample audio {
+         vertical-align: middle;
+         padding-left: 3px;
+         padding-right: 3px;
+         }
+         .round-button {
+         box-sizing: border-box;
+         display:block;
+         width:30px;
+         height:30px;
+         padding-top: 8px;
+         padding-left: 3px;
+         line-height: 6px;
+         border: 1.2px solid #000;
+         border-radius: 50%;
+         color: #000;
+         text-align:center;
+         background-color: rgba(0,0,0,0.00);
+         font-size:6px;
+         box-shadow: 0px 0px 2px rgba(0,0,0,1);
+         transition: all 0.2s ease;
+         }
+         .round-button:hover {
+         background-color: rgba(0,0,0,0.0);
+         box-shadow: 0px 0px 4px rgba(0,0,0,1);
+         }
+         .round-button:active {
+         background-color: rgba(0,0,0,0.01);
+         box-shadow: 0px 0px 1px rgba(0,0,0,1);
+         }
+      </style>
+   </head>
+
+   <body>
+     <div class="main">
+       <article>
+         <header>
+            <h1>End-to-End Integration of Speech Recognition, Dereverberation, Beamforming, and Self-Supervised Learning Representation[<a href="">paper</a>]</h1>		  
+         </header>
+      </article>
+      <div>
+      </div>
+
+      <p><b>Abstract:</b>
+      Self-supervised learning representation (SSLR) has demonstrated its significant effectiveness in automatic speech recognition (ASR), mainly with clean speech.
+      Recent work pointed out the strength of integrating SSLR with single-channel speech enhancement for ASR in noisy environments.
+      This paper further advances this integration by dealing with multi-channel input. We propose a novel end-to-end architecture by integrating dereverberation, beamforming, SSLR, and ASR within a single neural network.
+      Our system achieves the best performance reported in the literature on the CHiME-4 6-channel track with the word error rate (WER) of 1.95%, reaching clean speech performance.
+      While the WavLM-based strong SSLR demonstrates promising results with itself, the combination with the weighted power minimization distortionless response beamformer, which simultaneously performs dereverberation and denoising, improves WER significantly.
+      Its effectiveness is also validated on the REVERB dataset.
+      </p>
+
+      <h2>
+        Contents:
+      </h2>
+      <p>
+  <a href="#chime">CHiME-4 Examples</a><br>
+  <a href="#reverb">REVERB Examples</a><br>
+  <a href="#references">References</a><br>
+      </p>
+
+
+  <h2 id="chime">CHiME-4 Examples</h2>
+
+  <a href="#ex1">Eval Set Real: F05_440C020I_BUS_REAL</a><br>
+  <a href="#ex2">Eval Set Simu: F05_442C020Y_BUS_SIMU</a>
+
+  <h3 id="ex1">Eval Set Real: F05_440C020I_BUS_REAL</h3>
+  <table style="width:100%">
+    <tr>
+        <td align="left"> 
+		<b>Input Mixture (Channel 0)</b><br />
+		<b>Ground-truth transcript: </b><I>there shouldn't be any risk to the banks in this sort of stuff said lawrence cohn a banking analyst at merrill lynch and company</I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/Noisy/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/Noisy/F05_440C020I_BUS_REAL.wav"></audio>
+        </td>
+    <tr> 
+        <td align="left"> 
+		<b>IRIS +Joint Training (Channel 0)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort <span style="color:red"> ** </span> stuff said lawrence <span style="color:red"> POWER </span> a banking analyst at <span style="color:red"> MARYLAND COLLEGE  </span>.</I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/IRIS/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/IRIS/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>MPDR + WavLM  (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of  <span style="color:red"> ***** </span> said lawrence <span style="color:red"> **** * KING  </span>  analyst at merrill lynch <span style="color:red"> *** ******* </span>..<br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MPDR_wo_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MPDR_wo_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    <tr>
+    <td align="left"> 
+		<b>MPDR + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of <span style="color:red"> ***** </span> said lawrence <span style="color:red">  KING </span> a banking analyst at merrill lynch <span style="color:red">  *** ******* </span>.<br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MPDR_w_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MPDR_w_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>MVDR + WavLM (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of <span style="color:red"> ***** </span> said lawrence KING a banking analyst at merrill lynch <span style="color:red"> ***  </span> company <br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MVDR_wo_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MVDR_wo_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+        
+    <tr>
+        <td align="left"> 
+		<b>MVDR + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of <span style="color:red">  ***** </span> said lawrence cohn a banking analyst at merrill lynch and company.<br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MVDR_w_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MVDR_w_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    </tr>
+        <td align="left"> 
+		<b>WPD + WavLM (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of <span style="color:red"> **** </span> said lawrence cohn a banking analyst at merrill lynch company.
+        <p style="text-align: center">
+          <img src="examples/CHiME4/WPD_wo_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/WPD_wo_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    </tr>
+        <td align="left"> 
+		<b>WPD + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>there shouldn't be any risk to the banks in this sort of <span style="color:red"> **** </span> said lawrence cohn a banking analyst at merrill lynch company.</I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/WPD_w_Joint/F05_440C020I_BUS_REAL.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/WPD_w_Joint/F05_440C020I_BUS_REAL.wav"></audio>
+        </p>
+        </td>
+    </tr>
+  </table>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <h3 id="ex2">Eval Set Simu: F05_442C020Y_BUS_SIMU</h3>
+  <table style="width:100%">
+    <tr>
+        <td align="left"> 
+		<b>Input Mixture (Channel 0)</b><br />
+		<b>Ground-truth transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market.</I><br />
+		</b>
+        <p style="text-align: center">
+          <img src="examples/CHiME4/Noisy/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/Noisy/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>IRIS + Joint Training (Channel 0) </b><br />
+  		<b>Predicted transcript: </b><I>
+  		he also said <span style="color:red"> **** THIS </span> company for the first time  <span style="color:red"> IS  </span> developing <span style="color:red"> GROWTH IN  </span>  specifically <span style="color:red"> *** </span> the over the counter <span style="color:red"> COMPANY  </span> health care <span style="color:red"> ******  </span>.</I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/IRIS/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/IRIS/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>MPDR + WavLM  (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MPDR_wo_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MPDR_wo_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>MPDR + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MPDR_w_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MPDR_w_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>MVDR + WavLM  (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MVDR_wo_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MVDR_wo_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    </tr>
+        <td align="left"> 
+		<b>MVDR + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/MVDR_w_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/MVDR_w_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    </tr>
+        <td align="left"> 
+		<b>WPD + WavLM (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/WPD_wo_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/WPD_wo_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    </tr>
+    <td align="left"> 
+		<b>WPD + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market </I><br />
+        <p style="text-align: center">
+          <img src="examples/CHiME4/WPD_w_Joint/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/WPD_w_Joint/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </p>
+        </td>
+    </tr>
+    </tr>
+     <td align="left"> 
+		<b>Clean Speech (Channel 0)</b><br />
+		<b>Ground-truth transcript: </b><I>he also said that the company for the first time was developing drugs specifically for the over the counter consumer health care market.</I><br />
+		</b>
+        <p style="text-align: center">
+          <img src="examples/CHiME4/Clean/F05_442C020Y_BUS_SIMU.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/CHiME4/Clean/F05_442C020Y_BUS_SIMU.wav"></audio>
+        </td>
+    <tr>
+  </table>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <h2 id="reverb">REVERB Examples</h2>
+
+  <a href="#ex1">Eval Set Real: t21_RealData_et_for_8ch_far_room1_A_t21c0211</a><br>
+  <a href="#ex2">Eval Set Simu: c30_SimData_et_for_8ch_far_room1_A_c30c020a</a>
+
+  <h3 id="ex1">Eval Set Real: t21_RealData_et_for_8ch_far_room1_A_t21c0211</h3>
+  <table style="width:100%">
+    <tr>
+        <td align="left"> 
+		<b>Input Mixture (Channel 0)</b><br />
+		<b>Ground-truth transcript: </b><I>this isn't the kind of thing that will prove effective immediately one senior bank economist said .</I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/Noisy/t21_RealData_et_for_8ch_far_room1_A_t21c0211.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/Noisy/t21_RealData_et_for_8ch_far_room1_A_t21c0211.wav"></audio>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>WPD + WavLM  + Joint Training (MultiIRIS) (trained on CHiME4 data)</b><br />
+  		<b>Predicted transcript: </b><I>this isn't the kind of thing THAT will <span style="color:red">  ** PROVE  </span> effective immediately <span style="color:red">  **** ****  </span> one <span style="color:red">  SENIOR BANK  ECONOMIST  </span> said .</I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/WPD_trained_on_CHiME4/t21_RealData_et_for_8ch_far_room1_A_t21c0211.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/WPD_trained_on_CHiME4/t21_RealData_et_for_8ch_far_room1_A_t21c0211.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>WPD + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>this isn't the kind of thing that will prove effective immediately one senior bank economist said .</I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/WPD_w_Joint/t21_RealData_et_for_8ch_far_room1_A_t21c0211.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/WPD_w_Joint/t21_RealData_et_for_8ch_far_room1_A_t21c0211.wav"></audio>
+        </p>
+        </td>
+    </tr>
+    
+  </table>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+  <h3 id="ex2">Eval Set Simu: c30_SimData_et_for_8ch_far_room1_A_c30c020a</h3>
+  <table style="width:100%">
+    <tr>
+        <td align="left"> 
+	    <b>Input Mixture (Channel 0)</b><br />
+		<b>Ground-truth transcript: </b><I>in some cases there will be employment as usual.</I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/Noisy/c30_SimData_et_for_8ch_far_room1_A_c30c020a.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/Noisy/c30_SimData_et_for_8ch_far_room1_A_c30c020a.wav"></audio>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>WPD + WavLM + Joint Training (MultiIRIS) (trained on CHiME4 data)</b><br />
+  		<b>Predicted transcript: </b><I> in some cases there will be employment as usual .</b><I></I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/WPD_trained_on_CHiME4/c30_SimData_et_for_8ch_far_room1_A_c30c020a.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/WPD_trained_on_CHiME4/c30_SimData_et_for_8ch_far_room1_A_c30c020a.wav"></audio>
+        </p>
+        </td>
+    <tr>
+        <td align="left"> 
+		<b>WPD + WavLM + Joint Training (MultiIRIS)</b><br />
+  		<b>Predicted transcript: </b><I>in some cases there will be employment as usual.</b><I></I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/WPD_w_Joint/c30_SimData_et_for_8ch_far_room1_A_c30c020a.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/WPD_w_Joint/c30_SimData_et_for_8ch_far_room1_A_c30c020a.wav"></audio>
+        </p>
+        </td>
+     <tr>
+        <td align="left"> 
+		<b> Clean (Channel 0)</b><br />
+  		<b>Ground truth transcript: </b><I>in some cases there will be employment as usual.</b><I></I><br />
+        <p style="text-align: center">
+          <img src="examples/REVERB/Clean/c30_SimData_et_for_8ch_far_room1_c30c020a.png" width="600" alt=""/> <br />
+          <audio controls=""><source src="examples/REVERB/Clean/c30_SimData_et_for_8ch_far_room1_c30c020a.wav"></audio>
+        </p>
+        </td>
+    </tr>
+  </table>
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <!----------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+
+  <h3 id="references">References:</h3>
+         <p>
+  		[1] Chang, Xuankai, et al. "End-to-End Integration of Speech Recognition, Speech Enhancement, and Self-Supervised Learning Representation." arXiv preprint arXiv:2204.00540 (2022). [<a href="https://arxiv.org/abs/2204.00540">paper</a>]<br />
+         </p>
+
+</div>
+</body>
+</html>
